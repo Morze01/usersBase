@@ -29,7 +29,7 @@ public class LoginServlet extends HttpServlet {
 
         User user = userService.getUserByLogin(login);
         if (user == null || !pass.equals(user.getPassword())) {
-            response.sendRedirect("/login");
+            response.sendRedirect("/login.jsp");
             return;
         }
 
