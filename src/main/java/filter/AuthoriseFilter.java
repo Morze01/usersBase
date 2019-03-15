@@ -9,7 +9,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebFilter(urlPatterns = {"/*"})
-public class UserFilter implements Filter {
+public class AuthoriseFilter implements Filter {
     private String encoding;
     
     @Override
@@ -24,27 +24,16 @@ public class UserFilter implements Filter {
         if (null == request.getCharacterEncoding()) {
             request.setCharacterEncoding(encoding);
         }
-    
-        response.setContentType("text/html; charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
         
         User user = (User) ((HttpServletRequest) request).getSession().getAttribute("user");
-
         String currentUrl = ((HttpServletRequest) request).getRequestURI();
-        if (user == null) {
-            ((HttpServletResponse) response).sendRedirect("/login");
-        }
-
-
-
-        String role = user.getRole();
-
-        if (role.equals("admin") || role.equals("user")) {
-            filterChain.doFilter(request, response);
+        if (user == null && !("/login.jsp".equals(currentUrl)||"/login".equals(currentUrl))) {
+            ((HttpServletResponse) response).sendRedirect("/login.jsp");
             return;
         }
 
-        ((HttpServletResponse) response).sendRedirect("/error.html");
+        filterChain.doFilter(request, response);
+
     }
 
     @Override

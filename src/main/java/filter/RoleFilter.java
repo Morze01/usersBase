@@ -10,7 +10,7 @@ import java.io.IOException;
 
 
 @WebFilter(urlPatterns = {"/admin/*"})
-public class AdminFilter implements Filter {
+public class RoleFilter implements Filter {
     private String encoding;
     
     @Override
@@ -25,13 +25,10 @@ public class AdminFilter implements Filter {
         if (null == request.getCharacterEncoding()) {
             request.setCharacterEncoding(encoding);
         }
-    
-        response.setContentType("text/html; charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
         
         User user = (User) ((HttpServletRequest) request).getSession().getAttribute("user");
 
-        if (user != null && user.getRole().equals("admin")) {
+        if ("admin".equals(user.getRole())) {
             filterChain.doFilter(request, response);
             return;
         }
